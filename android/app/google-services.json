@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "618180449324",
+    "project_id": "movieshub-904e1",
+    "storage_bucket": "movieshub-904e1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618180449324:android:0185ceb2057715451d2d89",
+        "android_client_info": {
+          "package_name": "com.example.stack_design"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7ZaKG23BewFDG4LhipluNKsDyFsdiZYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

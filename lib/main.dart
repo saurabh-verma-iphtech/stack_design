@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:stack_design/screens/User/LoginPage.dart';
+import 'package:stack_design/screens/User/profile.dart';
+import 'package:stack_design/screens/User/settings.dart';
 import 'package:stack_design/screens/about.dart';
 import 'package:stack_design/screens/contact.dart';
 import 'package:stack_design/screens/movies.dart';
 import 'package:stack_design/screens/services.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 final GoRouter _router = GoRouter(
+  initialLocation: '/LoginPage',
   routes: [
     GoRoute(
       path: '/',
       builder:
-          (context, state) => const MyHomePage(
-            title: 'Working on Stack',
-          ), // Your current widget with nav bar
+          (context, state) => MyHomePage() // Your current widget with nav bar
     ),
+    // GoRoute(path: 'LoginPage',builder: (context, state) => Login(),),
     GoRoute(path: '/about', builder: (context, state) => AboutPage()),
     GoRoute(path: '/contact', builder: (context, state) => ContactUs()),
     GoRoute(path: '/services', builder: (context, state) => Services()),
+    GoRoute(path: '/profile', builder: (context, state) => UserProfile()),
+    GoRoute(path: '/settings', builder: (context, state) => Settings()),
+    GoRoute(path: '/LoginPage', builder: (context, state) => Login()),
   ],
 );
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -37,23 +48,189 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  // MyHomePage({super.key, required this.title});
+  // final String title;
+  List<dynamic> lists = [];
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _selectedIndex = 0;
+
+  final List<String> _routes = ['/', '/services', '/contact', '/about'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.amberAccent,
+        title: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 45.0),
+                  child: Text(
+                    'MoviesHub',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => context.go('/'),
+                  child: Text(
+                    "Home",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      // decoration: TextDecoration.underline,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => context.go('/about'),
+                  child: Text(
+                    "About",
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      // decoration: TextDecoration.underline,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap: () => context.go('/services'),
+                  child: Text(
+                    'Services',
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      // decoration: TextDecoration.underline,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => context.go('/contact'),
+                  child: Text(
+                    'Contact Us',
+                    style: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      // decoration: TextDecoration.underline,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        leading: Builder(
+          builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: IconButton(
+                icon: Icon(Icons.menu_sharp),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            );
+          },
+        ),
+      ),
+      drawer: SizedBox(
+        width: 250,
+        child: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              SizedBox(
+                height: 200,
+                child: DrawerHeader(
+                  margin: EdgeInsets.zero,
+                  decoration: BoxDecoration(color: Colors.blueAccent),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 35,
+                        foregroundImage: AssetImage('assets/images/myPic.jpg'),
+                      ),
+                      SizedBox(height: 10),
+                      Text('MoviesHub'),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: 400,
+                // color: Colors.amber,
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: ListView.separated(
+                        itemCount: 4, // Number of items
+                        separatorBuilder:
+                            (context, index) => Divider(
+                              height: 1,
+                              thickness: 2,
+                            ), // Divider between items
+                        itemBuilder: (context, index) {
+                          List<Map<String, dynamic>> menuItems = [
+                            {
+                              'title': 'Home',
+                              'icon': Icons.home,
+                              'route': '/',
+                            },
+                            {
+                              'title': 'Profile',
+                              'icon': Icons.person,
+                              'route': '/profile',
+                            },
+                            {
+                              'title': 'Settings',
+                              'icon': Icons.settings,
+                              'route': '/settings',
+                            },
+                            {
+                              'title': 'Logout',
+                              'icon': Icons.logout_sharp,
+                              'route': '/LoginPage',
+                            },
+                          ];
+                
+                          return ListTile(
+                            leading: Icon(menuItems[index]['icon']),
+                            title: Text(menuItems[index]['title']),
+                            onTap: () {
+                              Navigator.pop(context); // Closes the drawer
+                              context.push(menuItems[index]['route']);
+                              // print('${titles[index]} tapped');
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           Positioned.fill(
@@ -66,63 +243,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // Most Bottom Layer
           Padding(
-            padding: EdgeInsets.only(top: 35, left: 15, right: 15),
+            padding: EdgeInsets.only(top: 0, left: 15, right: 15),
             child: Column(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 209, 209, 209),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () => context.go('/'),
-                          child: Text(
-                            "Home",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              // decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => context.go('/about'),
-                          child: Text(
-                            "About",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              // decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => context.go('/contact'),
-                          child: Text(
-                            'Contact Us',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              // decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => context.go('/services'),
-                          child: Text(
-                            'Services',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              // decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 SizedBox(height: 10),
                 SizedBox(
                   height: 35,
@@ -167,7 +290,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           // Second Layer(Container)
           Positioned(
-            top: 160,
+            top: 90,
             left: 0,
             bottom: 0,
             right: 0,
@@ -254,7 +377,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // Third Layer(Container)
           Positioned(
-            top: 250,
+            top: 170,
             left: 0,
             bottom: 0,
             right: 0,
@@ -341,7 +464,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // Fourth Layer(Container)
           Positioned(
-            top: 350,
+            top: 250,
             left: 0,
             bottom: 0,
             right: 0,
@@ -428,7 +551,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           // Fifth Layer(Container)
           Positioned(
-            top: 440,
+            top: 330,
             left: 0,
             bottom: 0,
             right: 0,
@@ -514,7 +637,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           // Sixth Layer(Container)
           Positioned(
-            top: 527,
+            top: 420,
             left: 0,
             bottom: 0,
             right: 0,
@@ -609,6 +732,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
         unselectedItemColor: const Color.fromARGB(179, 12, 12, 12),
         type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          context.go(_routes[index]);
+        },
+
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Services'),
