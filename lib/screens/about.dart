@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stack_design/main.dart';
+import 'package:movies_hub/main.dart';
 
 class AboutPage extends StatelessWidget {
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stack_design/services/movieService.dart';
+import 'package:movies_hub/services/movieService.dart';
 
 class GenreMoviesPage extends StatefulWidget {
   final int genreId;
@@ -35,7 +35,9 @@ class _GenreMoviesPageState extends State<GenreMoviesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.genreName} Movies',style: TextStyle(fontWeight: FontWeight.bold),),backgroundColor: Color.fromARGB(255, 209, 209, 209),
+      appBar: AppBar(
+        leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back,color: Colors.black,))
+        ,title: Text('${widget.genreName} Movies',style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),),backgroundColor: Color.fromARGB(255, 209, 209, 209),
       ),
       body:
           movies.isEmpty

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:stack_design/screens/User/LoginPage.dart';
-import 'package:stack_design/screens/User/profileEditPage.dart';
+import 'package:movies_hub/screens/User/LoginPage.dart';
+import 'package:movies_hub/screens/User/profileEditPage.dart';
 
 class UserProfile extends StatefulWidget {
   @override
